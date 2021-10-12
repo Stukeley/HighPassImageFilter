@@ -10,8 +10,10 @@ namespace HighPassImageFilter.Code
 
 	public static class HighPassFilter
 	{
-		const int NetSize = 3;
+		// The "Mean Removal" filter uses 3x3 masks.
+		public const int NetSize = 3;
 
+		// Mask weights for the "Mean Removal" filter.
 		public static int[,] Masks = new int[NetSize,NetSize]
 		{
 			{
@@ -25,8 +27,10 @@ namespace HighPassImageFilter.Code
 			}
 		};
 		
+		// Input image.
 		public static Bitmap Input { get; set; }
 		
+		// Output image.
 		public static Bitmap Output { get; set; }
 		
 		static HighPassFilter()
@@ -38,8 +42,8 @@ namespace HighPassImageFilter.Code
 		public static void ApplyFilterToImage()
 		{
 			// Cut the edges.
-			int amountOfHorizontalNets = Input.Width -2;
-			int amountOfVerticalNets = Input.Height -2;
+			int amountOfHorizontalNets = Input.Width - 2;
+			int amountOfVerticalNets = Input.Height - 2;
 
 			for (int i = 0; i < amountOfHorizontalNets; i++)
 			{
