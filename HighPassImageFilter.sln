@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighPassImageFilter.Code", "HighPassImageFilter.Code\HighPassImageFilter.Code.csproj", "{57130CDD-3A16-400A-B90D-AF31B79A7554}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighPassImageFilter.UI", "HighPassImageFilter.UI\HighPassImageFilter.UI.csproj", "{AD83B309-ED93-4686-8453-10D10B820D91}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57130CDD-3A16-400A-B90D-AF31B79A7554}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57130CDD-3A16-400A-B90D-AF31B79A7554}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57130CDD-3A16-400A-B90D-AF31B79A7554}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57130CDD-3A16-400A-B90D-AF31B79A7554}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD83B309-ED93-4686-8453-10D10B820D91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD83B309-ED93-4686-8453-10D10B820D91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD83B309-ED93-4686-8453-10D10B820D91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD83B309-ED93-4686-8453-10D10B820D91}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
