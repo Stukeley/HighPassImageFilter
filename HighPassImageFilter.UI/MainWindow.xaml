@@ -4,9 +4,39 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HighPassImageFilter.UI"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        mc:Ignorable="d" ResizeMode="CanMinimize"
+        Title="High Pass Image Filter" Height="450" Width="800">
     <Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="7*"/>
+		</Grid.RowDefinitions>
+		
+		<TextBlock Grid.Row="0" Text="Browse for BMP file" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="DemiBold"/>
 
-    </Grid>
+		<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+			<Button x:Name="FileBrowserButton" Content="Browse" FontSize="12" Height="30" Padding="2" Click="FileBrowserButton_Click"/>
+			<TextBox x:Name="FilePathBox" FontSize="12" Width="500" Height="30" Margin="20,0,0,0"/>
+		</StackPanel>
+
+		<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+			<StackPanel>
+				<CheckBox x:Name="CsAlgorithmBox" Content="C#" FontSize="12" Padding="2" IsThreeState="False" VerticalAlignment="Center" 
+					Checked="CsAlgorithmBox_Checked" Unchecked="CsAlgorithmBox_Unchecked"/>
+				<CheckBox x:Name="AsmAlgorithmBox" Content="ASM" FontSize="12" Padding="2" IsThreeState="False" VerticalAlignment="Center"
+					Checked="AsmAlgorithmBox_Checked" Unchecked="AsmAlgorithmBox_Unchecked"/>
+			</StackPanel>
+			
+			<Button x:Name="FilterBitmapButton" Content="Filter" FontSize="12" Height="30" Width="50" IsEnabled="False" Click="FilterBitmapButton_Click" Margin="10,0,0,0"
+					Padding="2"/>
+			<Button x:Name="SaveBitmapButton" Content="Save" FontSize="12" Height="30" Width="50" IsEnabled="False" Click="SaveBitmapButton_OnClick" Margin="10,0,0,0"
+					Padding="2"/>
+		</StackPanel>
+
+		<StackPanel Grid.Row="3" x:Name="ContentPanel" Margin="0,10,0,0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+			
+		</StackPanel>
+	</Grid>
 </Window>

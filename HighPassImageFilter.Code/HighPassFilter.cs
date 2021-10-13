@@ -1,5 +1,7 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace HighPassImageFilter.Code
 {
@@ -7,6 +9,7 @@ namespace HighPassImageFilter.Code
 	// to wówczas będziemy wykonywać oddzielne przekształcenia dla składowej R, G oraz B.
 	// Jak łatwo zauważyć próba zastosowania filtracji dla punktów położonych na krawędzi obrazu, prowadzi do sytuacji, w której maska "wystaje" poza przetwarzany obraz. Istnieje kilka sposobów obejścia tego problemu. Jednym z nich jest pominięcie procesu filtracji dla takich punktów, innym jest zmniejszenie obrazu po filtracji o punkty, dla których proces ten nie mógł być wykonany. Kolejnym sposobem jest dodanie do filtrowanego obrazu zduplikowanych pikseli znajdujących się na jego brzegu.
 
+	// https://stackoverflow.com/questions/44918349/how-to-invoke-c-sharp-function-from-another-project-without-adding-reference
 
 	public static class HighPassFilter
 	{
@@ -20,10 +23,10 @@ namespace HighPassImageFilter.Code
 				-1, -1, -1
 			},
 			{
-				-1,9,-1
+				-1, 9, -1
 			},
 			{
-				-1,-1,-1
+				-1, -1, -1
 			}
 		};
 		
@@ -32,15 +35,11 @@ namespace HighPassImageFilter.Code
 		
 		// Output image.
 		public static Bitmap Output { get; set; }
-		
-		static HighPassFilter()
-		{
-			Input = new Bitmap(@"C:\Programowanie\HighPassImageFilter\HighPassImageFilter.Code\Resources\Input.bmp");
-			Output = new Bitmap(Input);
-		}
 
-		public static void ApplyFilterToImage()
+		public static Bitmap ApplyFilterToImage(Bitmap bitmap)
 		{
+			InitializeBitmaps(bitmap);
+			
 			// Cut the edges.
 			int amountOfHorizontalNets = Input.Width - 2;
 			int amountOfVerticalNets = Input.Height - 2;
@@ -52,48 +51,13 @@ namespace HighPassImageFilter.Code
 					int startingX = i;
 					int startingY = j;
 
-					var pixelValuesR = new int[NetSize, NetSize]
-					{
-						{
-							Input.GetPixel(startingX, startingY).R, Input.GetPixel(startingX + 1, startingY).R, Input.GetPixel(startingX + 2, startingY).R
-						},
-						{
-							Input.GetPixel(startingX, startingY + 1).R, Input.GetPixel(startingX + 1, startingY + 1).R, Input.GetPixel(startingX + 2, startingY + 2).R
-						},
-						{
-							Input.GetPixel(startingX, startingY + 2).R, Input.GetPixel(startingX + 1, startingY + 1).R, Input.GetPixel(startingX + 2, startingY + 2).R
-						}
-					};
-					
-					var pixelValuesG = new int[NetSize, NetSize]
-					{
-						{
-							Input.GetPixel(startingX, startingY).G, Input.GetPixel(startingX + 1, startingY).G, Input.GetPixel(startingX + 2, startingY).G
-						},
-						{
-							Input.GetPixel(startingX, startingY + 1).G, Input.GetPixel(startingX + 1, startingY + 1).G, Input.GetPixel(startingX + 2, startingY + 2).G
-						},
-						{
-							Input.GetPixel(startingX, startingY + 2).G, Input.GetPixel(startingX + 1, startingY + 1).G, Input.GetPixel(startingX + 2, startingY + 2).G
-						}
-					};
-					
-					var pixelValuesB = new int[NetSize, NetSize]
-					{
-						{
-							Input.GetPixel(startingX, startingY).B, Input.GetPixel(startingX + 1, startingY).B, Input.GetPixel(startingX + 2, startingY).B
-						},
-						{
-							Input.GetPixel(startingX, startingY + 1).B, Input.GetPixel(startingX + 1, startingY + 1).B, Input.GetPixel(startingX + 2, startingY + 2).B
-						},
-						{
-							Input.GetPixel(startingX, startingY + 2).B, Input.GetPixel(startingX + 1, startingY + 1).B, Input.GetPixel(startingX + 2, startingY + 2).B
-						}
-					};
+					var pixelValuesR = GetRgbValues(startingX, startingY, 'R');
+					var pixelValuesG = GetRgbValues(startingX, startingY, 'G');
+					var pixelValuesB = GetRgbValues(startingX, startingY, 'B');
 
-					ApplyFilterToImageFragment(ref pixelValuesR);
-					ApplyFilterToImageFragment(ref pixelValuesG);
-					ApplyFilterToImageFragment(ref pixelValuesB);
+					pixelValuesR = ApplyFilterToImageFragment(pixelValuesR);
+					pixelValuesG = ApplyFilterToImageFragment(pixelValuesG);
+					pixelValuesB = ApplyFilterToImageFragment(pixelValuesB);
 
 					for (int x = 0; x < NetSize; x++)
 					{
@@ -104,12 +68,62 @@ namespace HighPassImageFilter.Code
 					}
 				}
 			}
-
-			SaveImageToFile();
+			
+			return Output;
 		}
 
-		public static void ApplyFilterToImageFragment(ref int[,] imageFragment)
+		public static async Task<Bitmap> ApplyFilterToImageAsync(Bitmap bitmap)
 		{
+			InitializeBitmaps(bitmap);
+			
+			// Cut the edges.
+			int amountOfHorizontalNets = Input.Width - 2;
+			int amountOfVerticalNets = Input.Height - 2;
+
+			for (int i = 0; i < amountOfHorizontalNets; i++)
+			{
+				for (int j = 0; j < amountOfVerticalNets; j++)
+				{
+					int startingX = i;
+					int startingY = j;
+
+					var pixelValuesR = GetRgbValues(startingX, startingY, 'R');
+					var pixelValuesG = GetRgbValues(startingX, startingY, 'G');
+					var pixelValuesB = GetRgbValues(startingX, startingY, 'B');
+
+					var pixelValuesRTask = ApplyFilterToImageFragmentAsync(pixelValuesR);
+					var pixelValuesGTask = ApplyFilterToImageFragmentAsync(pixelValuesG);
+					var pixelValuesBTask = ApplyFilterToImageFragmentAsync(pixelValuesB);
+
+					await Task.WhenAll(pixelValuesRTask, pixelValuesGTask, pixelValuesBTask);
+
+					pixelValuesR = await pixelValuesRTask;
+					pixelValuesG = await pixelValuesGTask;
+					pixelValuesB = await pixelValuesBTask;
+					
+					for (int x = 0; x < NetSize; x++)
+					{
+						for (int y = 0; y < NetSize; y++)
+						{
+							Output.SetPixel(startingX + x, startingY + y, Color.FromArgb(pixelValuesR[x, y], pixelValuesG[x, y], pixelValuesB[x, y]));
+						}
+					}
+				}
+			}
+
+			return Output;
+		}
+		
+		private static void InitializeBitmaps(Bitmap bitmap)
+		{
+			Input = bitmap;
+			Output = new Bitmap(Input);
+		}
+
+		public static int[,] ApplyFilterToImageFragment(int[,] imageFragment)
+		{
+			var modifiedFragment = new int[NetSize, NetSize];
+			
 			// http://www.algorytm.org/przetwarzanie-obrazow/filtrowanie-obrazow.html
 			int sumOfMasks = SumElementsIn2DArray(Masks);
 
@@ -124,9 +138,36 @@ namespace HighPassImageFilter.Code
 						newValue = newValue / sumOfMasks;
 					}
 					
-					imageFragment[x, y] = newValue;
+					modifiedFragment[x, y] = newValue;
 				}
 			}
+
+			return modifiedFragment;
+		}
+		
+		public static async Task<int[,]> ApplyFilterToImageFragmentAsync(int[,] imageFragment)
+		{
+			var modifiedFragment = new int[NetSize, NetSize];
+
+			// http://www.algorytm.org/przetwarzanie-obrazow/filtrowanie-obrazow.html
+			int sumOfMasks = SumElementsIn2DArray(Masks);
+
+			for (int x = 0; x < imageFragment.GetLength(0); x++)
+			{
+				for (int y = 0; y < imageFragment.GetLength(1); y++)
+				{
+					int newValue = GetNewPixelValue(imageFragment);
+
+					if (sumOfMasks != 0)
+					{
+						newValue = newValue / sumOfMasks;
+					}
+					
+					modifiedFragment[x, y] = newValue;
+				}
+			}
+
+			return modifiedFragment;
 		}
 
 		private static int GetNewPixelValue(int[,] imageFragment)
@@ -170,9 +211,37 @@ namespace HighPassImageFilter.Code
 			return sum;
 		}
 
-		public static void SaveImageToFile()
+		public static int[,] GetRgbValues(int startX, int startY, char colorCode)
 		{
-			Output.Save(@"C:\Programowanie\HighPassImageFilter\HighPassImageFilter.Code\Resources\Output.bmp");
+			var values = new int[NetSize, NetSize];
+
+			for (int i = 0; i < NetSize; i++)
+			{
+				for (int j = 0; j < NetSize; j++)
+				{
+					var pixel = Input.GetPixel(startX + i, startY + j);
+
+					switch (colorCode)
+					{
+						case 'R':
+							values[i, j] = pixel.R;
+							break;
+						case 'G':
+							values[i, j] = pixel.G;
+							break;
+						case 'B':
+							values[i, j] = pixel.B;
+							break;
+					}
+				}
+			}
+
+			return values;
+		}
+
+		public static void SaveImageToFile(Bitmap bitmap, string fileName)
+		{
+			bitmap.Save(fileName);
 		}
 	}
 }
