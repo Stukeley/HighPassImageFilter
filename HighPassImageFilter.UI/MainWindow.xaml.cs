@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Temat: Filtr górnoprzepustowy "HP1" dla obrazów typu Bitmap.
+// Opis: Algorytm nakłada filtr "HP1" dla pikseli obrazu typu Bitmap, podanego przez użytkownika przy pomocy interfejsu graficznego.
+// Autor: Rafał Klinowski, Informatyka, rok 3, sem. 5, gr. 5, data: [TODO]
+// Wersja: 1.0.
+
 using Microsoft.Win32;
 using System.Drawing;
 using System.IO;
@@ -76,6 +80,13 @@ namespace HighPassImageFilter.UI
 
 		}
 
+		/// <summary>
+		/// Zdarzenie wywołujące się w momencie naciśnięcia przez użytkownika przycisku Filter.
+		/// Funkcja ta powoduje wywołanie algorytmu filtru górnoprzepustowego dla podanego przez użytkownika obrazu.
+		/// W zależności od tego, który algorytm został wybrany (C# czy ASM), zostanie załadowana odpowiednia biblioteka.
+		/// </summary>
+		/// <param name="sender">Automatycznie wygenerowany parametr oznaczający przycisk, który wywołał zdarzenie.</param>
+		/// <param name="e">Automatycznie wygenerowany parametr zawierający argumenty zdarzenia.</param>
 		private void FilterBitmapButton_Click(object sender, RoutedEventArgs e)
 		{
 			if (_asmAlgorithm)
@@ -88,6 +99,10 @@ namespace HighPassImageFilter.UI
 			}
 		}
 
+		/// <summary>
+		/// Funkcja wywołuje algorytm filtru obrazu w bibliotece napisanej w C#.
+		/// Jako parametr przekazywana jest zmienna _bitmap zawierająca podany przez użytkownika obraz.
+		/// </summary>
 		public async void CallCsAlgorithm()
 		{
 			var newBitmap = await Task.Run(() => Code.HighPassFilter.ApplyFilterToImageAsync(_bitmap));
@@ -104,11 +119,20 @@ namespace HighPassImageFilter.UI
 			SaveBitmapButton.IsEnabled = true;
 		}
 
+		/// <summary>
+		/// Funkcja wywołuje algorytm filtru obrazu w bibliotece napisanej w ASM.
+		/// Jako parametr przekazywana jest zmienna _bitmap zawierająca podany przez użytkownika obraz.
+		/// </summary>
 		public async void CallAsmAlgorithm()
 		{
 			
 		}
 
+		/// <summary>
+		/// Funkcja konwertuje bitmapę, zwróconą przez algorytm filtru, na obiekt ImageSource potrzebny do wyświetlenia obrazu na interfejsie.
+		/// </summary>
+		/// <param name="bitmap">Bitmapa, która ma zostać przekonwertowana i wyświetlona na ekran.</param>
+		/// <returns>Obiekt ImageSource, który następnie zostanie wyświetlony na interfejsie.</returns>
 		private static ImageSource ConvertBitmapToImageSource(Bitmap bitmap)
 		{
 			if (bitmap is null)
@@ -130,7 +154,14 @@ namespace HighPassImageFilter.UI
 			}
 		}
 
-		private void SaveBitmapButton_OnClick(object sender, RoutedEventArgs e)
+		/// <summary>
+		/// Zdarzenie wywołujące się w momencie naciśnięcia przez użytkownika przycisku Save.
+		/// Funkcja ta otwiera okno wyboru ścieżki do pliku na dysku użytkownika. Bitmapa, na którą został nałożony filtr, zostanie następnie zapisana na dysk
+		/// w danym miejscu.
+		/// </summary>
+		/// <param name="sender">Automatycznie wygenerowany parametr oznaczający przycisk, który wywołał zdarzenie.</param>
+		/// <param name="e">Automatycznie wygenerowany parametr zawierający argumenty zdarzenia.</param>
+		private void SaveBitmapButton_Click(object sender, RoutedEventArgs e)
 		{
 			var saveFileDialog = new SaveFileDialog()
 			{
@@ -140,7 +171,7 @@ namespace HighPassImageFilter.UI
 
 			if (saveFileDialog.ShowDialog() == true)
 			{
-				if (Path.GetExtension(saveFileDialog.FileName) == String.Empty)
+				if (Path.GetExtension(saveFileDialog.FileName) != ".bmp")
 				{
 					saveFileDialog.FileName += ".bmp";
 				}
@@ -149,24 +180,48 @@ namespace HighPassImageFilter.UI
 			}
 		}
 
+		/// <summary>
+		/// Zdarzenie wywołujące się w momencie odznaczenia checkboxa "ASM".
+		/// Funkcja ta powoduje zanaczenie checkboxa "C#" tak, by dokładnie jeden z nich był aktywny w danym momencie.
+		/// </summary>
+		/// <param name="sender">Automatycznie wygenerowany parametr oznaczający checkbox, który wywołał zdarzenie.</param>
+		/// <param name="e">Automatycznie wygenerowany parametr zawierający argumenty zdarzenia.</param>
 		private void AsmAlgorithmBox_Unchecked(object sender, RoutedEventArgs e)
 		{
 			CsAlgorithmBox.IsChecked = true;
 			_asmAlgorithm = false;
 		}
 
+		/// <summary>
+		/// Zdarzenie wywołujące się w momencie odznaczenia checkboxa "C#".
+		/// Funkcja ta powoduje zaznaczenie checkboxa "ASM" tak, by dokładnie jeden z nich był aktywny w danym momencie.
+		/// </summary>
+		/// <param name="sender">Automatycznie wygenerowany parametr oznaczający checkbox, który wywołał zdarzenie.</param>
+		/// <param name="e">Automatycznie wygenerowany parametr zawierający argumenty zdarzenia.</param>
 		private void CsAlgorithmBox_Unchecked(object sender, RoutedEventArgs e)
 		{
 			AsmAlgorithmBox.IsChecked = true;
 			_asmAlgorithm = true;
 		}
 
+		/// <summary>
+		/// Zdarzenie wywołujące się w momencie zaznaczenia checkboxa "ASM".
+		/// Funkcja ta powoduje odznaczenie checkboxa "C#" tak, by dokładnie jeden z nich był aktywny w danym momencie.
+		/// </summary>
+		/// <param name="sender">Automatycznie wygenerowany parametr oznaczający checkbox, który wywołał zdarzenie.</param>
+		/// <param name="e">Automatycznie wygenerowany parametr zawierający argumenty zdarzenia.</param>
 		private void AsmAlgorithmBox_Checked(object sender, RoutedEventArgs e)
 		{
 			CsAlgorithmBox.IsChecked = false;
 			_asmAlgorithm = false;
 		}
 
+		/// <summary>
+		/// Zdarzenie wywołujące się w momencie zaznaczenia checkboxa "C#".
+		/// Funkcja ta powoduje odznaczenie checkboxa "ASM" tak, by dokładnie jeden z nich był aktywny w danym momencie.
+		/// </summary>
+		/// <param name="sender">Automatycznie wygenerowany parametr oznaczający checkbox, który wywołał zdarzenie.</param>
+		/// <param name="e">Automatycznie wygenerowany parametr zawierający argumenty zdarzenia.</param>
 		private void CsAlgorithmBox_Checked(object sender, RoutedEventArgs e)
 		{
 			AsmAlgorithmBox.IsChecked = false;
