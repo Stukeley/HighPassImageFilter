@@ -6,7 +6,7 @@
 using System.Drawing;
 using System.Threading.Tasks;
 
-namespace HighPassImageFilter.Code
+namespace HighPassImageFilter.CS
 {
 	// https://stackoverflow.com/questions/44918349/how-to-invoke-c-sharp-function-from-another-project-without-adding-reference
 

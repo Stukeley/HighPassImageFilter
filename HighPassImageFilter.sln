@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31402.337
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HighPassImageFilter.CS", "HighPassImageFilter.Code\HighPassImageFilter.CS.csproj", "{57130CDD-3A16-400A-B90D-AF31B79A7554}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HighPassImageFilter.UserInterface", "HighPassImageFilter.UI\HighPassImageFilter.UserInterface.csproj", "{AD83B309-ED93-4686-8453-10D10B820D91}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HighPassImageFilter.ASM", "HighPassImageFilter.ASM\HighPassImageFilter.ASM.vcxproj", "{43053A43-4B34-48F0-BBDA-B5E86313F169}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighPassImageFilter.CS", "HighPassImageFilter.CS\HighPassImageFilter.CS.csproj", "{39FC5583-9608-4CC4-9348-FA013CD3C49D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighPassImageFilter.UserInterface", "HighPassImageFilter.UserInterface\HighPassImageFilter.UserInterface.csproj", "{A09CA6B6-E3D6-41B7-B5F0-CC0ACA43F539}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,17 +15,17 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{57130CDD-3A16-400A-B90D-AF31B79A7554}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57130CDD-3A16-400A-B90D-AF31B79A7554}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57130CDD-3A16-400A-B90D-AF31B79A7554}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57130CDD-3A16-400A-B90D-AF31B79A7554}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AD83B309-ED93-4686-8453-10D10B820D91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AD83B309-ED93-4686-8453-10D10B820D91}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AD83B309-ED93-4686-8453-10D10B820D91}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AD83B309-ED93-4686-8453-10D10B820D91}.Release|Any CPU.Build.0 = Release|Any CPU
 		{43053A43-4B34-48F0-BBDA-B5E86313F169}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{43053A43-4B34-48F0-BBDA-B5E86313F169}.Release|Any CPU.ActiveCfg = Release|Win32
 		{43053A43-4B34-48F0-BBDA-B5E86313F169}.Release|Any CPU.Build.0 = Release|Win32
+		{39FC5583-9608-4CC4-9348-FA013CD3C49D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39FC5583-9608-4CC4-9348-FA013CD3C49D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39FC5583-9608-4CC4-9348-FA013CD3C49D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39FC5583-9608-4CC4-9348-FA013CD3C49D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A09CA6B6-E3D6-41B7-B5F0-CC0ACA43F539}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A09CA6B6-E3D6-41B7-B5F0-CC0ACA43F539}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A09CA6B6-E3D6-41B7-B5F0-CC0ACA43F539}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A09CA6B6-E3D6-41B7-B5F0-CC0ACA43F539}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

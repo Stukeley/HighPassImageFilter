@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\HighPassImageFilter.Code\HighPassImageFilter.CS.csproj" />
+      <ProjectReference Include="..\HighPassImageFilter.CS\HighPassImageFilter.CS.csproj" />
     </ItemGroup>
 
 </Project>

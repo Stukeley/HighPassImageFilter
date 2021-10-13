@@ -5,7 +5,7 @@
 
 using System.Windows;
 
-namespace HighPassImageFilter.UI
+namespace HighPassImageFilter.UserInterface
 {
 	public partial class App : Application
 	{

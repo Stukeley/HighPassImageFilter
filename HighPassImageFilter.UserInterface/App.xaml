@@ -3,10 +3,10 @@
 <!-- Autor: Rafał Klinowski, Informatyka, rok 3, sem. 5, gr. 5, data: [TODO] -->
 <!-- Wersja: 1.0. -->
 
-<Application x:Class="HighPassImageFilter.UI.App"
+<Application x:Class="HighPassImageFilter.UserInterface.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:HighPassImageFilter.UI"
+             xmlns:local="clr-namespace:HighPassImageFilter.UserInterface"
              StartupUri="MainWindow.xaml" Startup="App_OnStartup">
     <Application.Resources>
          

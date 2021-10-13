@@ -11,7 +11,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace HighPassImageFilter.UI
+namespace HighPassImageFilter.UserInterface
 {
 	// todo: pomiar czasu
 	// todo: dynamiczne przeładowanie
@@ -105,7 +105,7 @@ namespace HighPassImageFilter.UI
 		/// </summary>
 		public async void CallCsAlgorithm()
 		{
-			var newBitmap = await Task.Run(() => Code.HighPassFilter.ApplyFilterToImageAsync(_bitmap));
+			var newBitmap = await Task.Run(() => CS.HighPassFilter.ApplyFilterToImageAsync(_bitmap));
 
 			ContentPanel.Children.Add(new System.Windows.Controls.Image()
 			{
@@ -166,7 +166,8 @@ namespace HighPassImageFilter.UI
 			var saveFileDialog = new SaveFileDialog()
 			{
 				Filter = "Bitmap files (*.bmp)|*.bmp|All files (*.*)|*.*",
-				InitialDirectory = Directory.GetCurrentDirectory()
+				InitialDirectory = Directory.GetCurrentDirectory(),
+				FileName = "Output.bmp"
 			};
 
 			if (saveFileDialog.ShowDialog() == true)
@@ -176,7 +177,7 @@ namespace HighPassImageFilter.UI
 					saveFileDialog.FileName += ".bmp";
 				}
 				
-				Code.HighPassFilter.SaveImageToFile(_bitmap, saveFileDialog.FileName);
+				CS.HighPassFilter.SaveImageToFile(_bitmap, saveFileDialog.FileName);
 			}
 		}
 
