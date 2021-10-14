@@ -4,6 +4,7 @@
 // Wersja: 1.0.
 
 using Microsoft.Win32;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
@@ -22,21 +23,32 @@ namespace HighPassImageFilter.UserInterface
 		/// Bitmapa wejściowa, na której nakładany jest filtr.
 		/// </summary>
 		private static Bitmap _bitmap;
-		
+
 		/// <summary>
 		/// Zmienna bool informująca o tym, czy algorytm jest wywoływany w języku C# czy ASM.
 		/// </summary>
 		private static bool _asmAlgorithm;
 
 		/// <summary>
+		/// Zmienna przechowująca czas wykonywania (pojedynczego wywołania) algorytmu jako sformatowany napis.
+		/// </summary>
+		private static string _executionTime;
+
+		/// <summary>
+		/// Zmienna służąca do pomiaru czasu potrzebnego na wykonanie algorytmu.s
+		/// </summary>
+		private static Stopwatch _stopwatch;
+
+		/// <summary>
 		/// Konstruktor okna uruchamiający się automatycznie na początku działania programu.
-		/// Przygotowuje interfejs i ustawia wartości początkowe zmiennych.
+		/// Przygotowuje interfejs i ustawia wartości początkowe zmiennych, jak również inicjalizuje stoper (do pomiaru czasu wykonania).
 		/// </summary>
 		public MainWindow()
 		{
 			InitializeComponent();
 			CsAlgorithmBox.IsChecked = true;
 			_asmAlgorithm = false;
+			_stopwatch = new Stopwatch();
 		}
 
 		/// <summary>
@@ -62,9 +74,10 @@ namespace HighPassImageFilter.UserInterface
 					MessageBox.Show("A file with an incorrect extension has been selected. This program only accepts bitmap (.bmp) files.", "Wrong file extension", MessageBoxButton.OK, MessageBoxImage.Warning);
 					return;
 				}
-				
+
 				ContentPanel.Children.Clear();
 				SaveBitmapButton.IsEnabled = false;
+				ExecutionTimeBlock.Text = "";
 
 				FilePathBox.Text = fileName;
 				_bitmap = new Bitmap(fileName);
@@ -89,6 +102,8 @@ namespace HighPassImageFilter.UserInterface
 		/// <param name="e">Automatycznie wygenerowany parametr zawierający argumenty zdarzenia.</param>
 		private void FilterBitmapButton_Click(object sender, RoutedEventArgs e)
 		{
+			_stopwatch.Restart();
+
 			if (_asmAlgorithm)
 			{
 				CallAsmAlgorithm();
@@ -97,6 +112,10 @@ namespace HighPassImageFilter.UserInterface
 			{
 				CallCsAlgorithm();
 			}
+
+			_stopwatch.Stop();
+			_executionTime = "Execution time: " + _stopwatch.Elapsed.ToString(@"mm\:ss\.fff");
+			ExecutionTimeBlock.Text = _executionTime;
 		}
 
 		/// <summary>
@@ -125,7 +144,7 @@ namespace HighPassImageFilter.UserInterface
 		/// </summary>
 		public async void CallAsmAlgorithm()
 		{
-			
+
 		}
 
 		/// <summary>
@@ -176,7 +195,7 @@ namespace HighPassImageFilter.UserInterface
 				{
 					saveFileDialog.FileName += ".bmp";
 				}
-				
+
 				CS.HighPassFilter.SaveImageToFile(_bitmap, saveFileDialog.FileName);
 			}
 		}
