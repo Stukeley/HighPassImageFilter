@@ -14,7 +14,6 @@ using System.Windows.Media.Imaging;
 
 namespace HighPassImageFilter.UserInterface
 {
-	// todo: pomiar czasu
 	// todo: dynamiczne przeładowanie
 	// todo: exception handling
 	public partial class MainWindow : Window
@@ -49,6 +48,8 @@ namespace HighPassImageFilter.UserInterface
 			CsAlgorithmBox.IsChecked = true;
 			_asmAlgorithm = false;
 			_stopwatch = new Stopwatch();
+
+			//TestAsm();
 		}
 
 		/// <summary>
@@ -122,9 +123,10 @@ namespace HighPassImageFilter.UserInterface
 		/// Funkcja wywołuje algorytm filtru obrazu w bibliotece napisanej w C#.
 		/// Jako parametr przekazywana jest zmienna _bitmap zawierająca podany przez użytkownika obraz.
 		/// </summary>
-		public async void CallCsAlgorithm()
+		public void CallCsAlgorithm()
 		{
-			var newBitmap = await Task.Run(() => CS.HighPassFilter.ApplyFilterToImageAsync(_bitmap));
+			var newBitmap = Task.Run(()=>HighPassImageFilter.CS.HighPassFilter.ApplyFilterToImage(_bitmap)).Result;	// Debug only
+			// var newBitmap = Task.Run(() => CsCaller.ApplyFilterToImage(_bitmap)).Result;
 
 			ContentPanel.Children.Add(new System.Windows.Controls.Image()
 			{
@@ -144,7 +146,7 @@ namespace HighPassImageFilter.UserInterface
 		/// </summary>
 		public async void CallAsmAlgorithm()
 		{
-
+			var newBitmap = AsmCaller.ApplyFilterToImage(_bitmap);
 		}
 
 		/// <summary>
@@ -233,7 +235,7 @@ namespace HighPassImageFilter.UserInterface
 		private void AsmAlgorithmBox_Checked(object sender, RoutedEventArgs e)
 		{
 			CsAlgorithmBox.IsChecked = false;
-			_asmAlgorithm = false;
+			_asmAlgorithm = true;
 		}
 
 		/// <summary>
@@ -245,7 +247,17 @@ namespace HighPassImageFilter.UserInterface
 		private void CsAlgorithmBox_Checked(object sender, RoutedEventArgs e)
 		{
 			AsmAlgorithmBox.IsChecked = false;
-			_asmAlgorithm = true;
+			_asmAlgorithm = false;
+		}
+
+		private void TestAsm()
+		{
+			var testArray = new int[3, 3]
+			{
+				{5,5,5 },
+				{5,5,5 },
+				{5,5,5 }
+			};
 		}
 	}
 }

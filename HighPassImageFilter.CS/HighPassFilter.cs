@@ -55,13 +55,12 @@ namespace HighPassImageFilter.CS
 		{
 			InitializeBitmaps(bitmap);
 			
-			// Cut the edges.
-			int amountOfHorizontalNets = Input.Width - 2;
-			int amountOfVerticalNets = Input.Height - 2;
+			// Ponieważ wybieramy siatki o rozmiarach 3x3, zaczynamy od drugiego piksela (o indeksie 1) a kończymy na pikselu przedostatnim
+			// (o indeksie Width - 2 lub Height - 2).
 
-			for (int i = 0; i < amountOfHorizontalNets; i++)
+			for (int i = 1; i < Input.Width - 2; i++)
 			{
-				for (int j = 0; j < amountOfVerticalNets; j++)
+				for (int j = 1; j < Input.Height - 2; j++)
 				{
 					int startingX = i;
 					int startingY = j;

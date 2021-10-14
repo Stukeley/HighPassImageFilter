@@ -1,0 +1,4 @@
+﻿  TestCppRuntime.cpp
+C:\Programowanie\HighPassImageFilter\TestCppRuntime\Algorytm.h(216,20): warning C4018: '<': signed/unsigned mismatch
+C:\Programowanie\HighPassImageFilter\TestCppRuntime\Algorytm.h(232,16): warning C4018: '<': signed/unsigned mismatch
+  TestCppRuntime.vcxproj -> C:\Programowanie\HighPassImageFilter\x64\Debug\TestCppRuntime.exe

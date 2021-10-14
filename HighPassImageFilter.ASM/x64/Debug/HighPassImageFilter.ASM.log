@@ -1,0 +1,5 @@
+﻿  Assembling Main.asm...
+Main.asm(10): warning A6004: procedure argument or local not referenced : hInstDLL
+Main.asm(10): warning A6004: procedure argument or local not referenced : reason
+Main.asm(10): warning A6004: procedure argument or local not referenced : reserved1
+  HighPassImageFilter.ASM.vcxproj -> C:\Programowanie\HighPassImageFilter\x64\Debug\HighPassImageFilter.ASM.dll
