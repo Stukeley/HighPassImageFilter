@@ -46,7 +46,7 @@ unsigned int* LoadBmpFromFileTest()
 	unsigned int* bitmap = new unsigned int[54 + width * height];
 	FILE* f;
 
-	fopen_s(&f, "C:\\Programowanie\\HighPassImageFilter\\HighPassImageFilter.CS\\Resources\\Input.bmp", "rb");
+	//fopen_s(&f, "C:\\Programowanie\\HighPassImageFilter\\HighPassImageFilter.CS\\Resources\\Input.bmp", "rb");
 
 	fread(bitmap, sizeof(unsigned int), 54 + width * height, f);
 
@@ -61,7 +61,7 @@ void SaveBmpToFileTest(unsigned int* bitmap)
 
 	FILE* f;
 
-	fopen_s(&f, "C:\\Programowanie\\HighPassImageFilter\\HighPassImageFilter.CS\\Resources\\OutputCpp.bmp", "wb");
+	//fopen_s(&f, "C:\\Programowanie\\HighPassImageFilter\\HighPassImageFilter.CS\\Resources\\OutputCpp.bmp", "wb");
 
 	fwrite(bitmap, sizeof(unsigned int), 54 + width * height, f);
 

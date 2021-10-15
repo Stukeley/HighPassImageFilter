@@ -125,8 +125,12 @@ namespace HighPassImageFilter.UserInterface
 		/// </summary>
 		public void CallCsAlgorithm()
 		{
-			var newBitmap = Task.Run(()=>HighPassImageFilter.CS.HighPassFilter.ApplyFilterToImage(_bitmap)).Result;	// Debug only
+			//var newBitmap = Task.Run(()=>HighPassImageFilter.CS.HighPassFilter.ApplyFilterToImage(_bitmap)).Result; // Debug only
 			// var newBitmap = Task.Run(() => CsCaller.ApplyFilterToImage(_bitmap)).Result;
+
+			var bitmapAsArray = BitmapConverter.ConvertBitmapToByteArray(_bitmap);
+			var newBitmapAsArray = Task.Run(() => HighPassImageFilter.CS.HighPassFilterBytes.ApplyFilterToImage(bitmapAsArray, _bitmap.Width, _bitmap.Height)).Result;
+			var newBitmap = BitmapConverter.ConvertByteArrayToBitmap(newBitmapAsArray);
 
 			ContentPanel.Children.Add(new System.Windows.Controls.Image()
 			{
