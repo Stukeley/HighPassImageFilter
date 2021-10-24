@@ -20,8 +20,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="Main.asm">
+    <CustomBuild Include="Main.asm">
       <Filter>Source Files</Filter>
-    </MASM>
+    </CustomBuild>
   </ItemGroup>
 </Project>

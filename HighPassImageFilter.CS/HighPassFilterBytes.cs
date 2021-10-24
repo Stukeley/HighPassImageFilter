@@ -3,7 +3,6 @@
 // Autor: Rafał Klinowski, Informatyka, rok 3, sem. 5, gr. 5, data: [TODO]
 // Wersja: 1.0.
 
-using System.Drawing;
 using System.IO;
 
 namespace HighPassImageFilter.CS
@@ -63,7 +62,7 @@ namespace HighPassImageFilter.CS
 					{
 						for (int y = 0; y < NetSize; y++)
 						{
-							Output.SetPixel(startingX + x, startingY + y, Color.FromArgb(pixelValuesR[x, y], pixelValuesG[x, y], pixelValuesB[x, y]));
+							//Output.SetPixel(startingX + x, startingY + y, Color.FromArgb(pixelValuesR[x, y], pixelValuesG[x, y], pixelValuesB[x, y]));
 						}
 					}
 				}

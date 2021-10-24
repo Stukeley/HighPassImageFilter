@@ -15,45 +15,6 @@ unsigned int* Output;
 unsigned int BmpWidth;
 unsigned int BmpHeight;
 
-unsigned int* ApplyFilterToImage(unsigned int* bitmap, int width, int height)
-{
-	BmpWidth = width;
-	BmpHeight = height;
-
-	InitializeMasks();
-
-	InitializeInputAndOutput(bitmap);
-
-	for (int i = 1; i < width - 2; i++)
-	{
-		for (int j = 1; j < height - 2; j++)
-		{
-			int startingX = i;
-			int startingY = j;
-
-			int** pixelValuesR = GetRgbValues(startingX, startingY, 'R');
-			int** pixelValuesG = GetRgbValues(startingX, startingY, 'G');
-			int** pixelValuesB = GetRgbValues(startingX, startingY, 'B');
-
-			pixelValuesR = ApplyFilterToImageFragment(pixelValuesR);
-			pixelValuesG = ApplyFilterToImageFragment(pixelValuesG);
-			pixelValuesB = ApplyFilterToImageFragment(pixelValuesB);
-
-			for (int x = 0; x < NetSize; x++)
-			{
-				for (int y = 0; y < NetSize; y++)
-				{
-					Output[startingX + x + (startingY + y) * BmpWidth] = pixelValuesR[x][y] + pixelValuesG[x][y] + pixelValuesB[x][y];
-				}
-			}
-		}
-	}
-
-	AddHeaderToOutput(bitmap);
-	
-	return Output;
-}
-
 int** ApplyFilterToImageFragment(int** imageFragment)
 {
 	int** modifiedFragment = new int* [NetSize];
@@ -136,48 +97,27 @@ int** GetRgbValues(int startX, int startY, char colorCode)
 	// Indeks œrodkowego piksela.
 	int calculatedIndex = startX + (startY)*BmpWidth;
 
-	// Kolejne indeksy:
-	// c b c
-	// a x a
-	// c b c
-	// iks) calculated index
-	// a) poprzedni i nastêpny
-	// b) calculatedIndex +- BmpWidth
-	// c) poprzedni i nastêpny dla +- BmpWidth
-
-	//pixelValues[0][0] = calculatedIndex - BmpWidth - 1;
-	//pixelValues[0][1] = calculatedIndex - BmpWidth;
-	//pixelValues[0][2] = calculatedIndex - BmpWidth + 1;
-
-	//pixelValues[1][0] = calculatedIndex - 1;
-	//pixelValues[1][1] = calculatedIndex;
-	//pixelValues[1][2] = calculatedIndex + 1;
-
-	//pixelValues[2][0] = calculatedIndex + BmpWidth - 1;
-	//pixelValues[2][1] = calculatedIndex + BmpWidth;
-	//pixelValues[2][2] = calculatedIndex + BmpWidth + 1;
-
-	for (int i = 0; i < NetSize; i++)
+	for (int j = 0; j < NetSize; j++)
 	{
-		for (int j = 0; j < NetSize; j++)
+		for (int i = 0; i < NetSize; i++)
 		{
-			pixelValues[i][j] = Input[calculatedIndex + ((-1 + i) * BmpWidth) + (j - 1)];
+			int middlePixelIndex = (startX + startY * BmpWidth) * 3;
 
-			// Kolejnoœæ pixeli: 0 B G R
+			int index = middlePixelIndex + (BmpWidth * (j - 1) + (i - 1)) * 3;
 
 			switch (colorCode)
 			{
-				case 'R':
-					pixelValues[i][j] = (pixelValues[i][j] >> 0) & 0xFF;
-					break;
+			case 'R':
+				pixelValues[i][j] = Input[index];
+				break;
 
-				case 'G':
-					pixelValues[i][j] = (pixelValues[i][j] >> 8) & 0xFF;
-					break;
+			case 'G':
+				pixelValues[i][j] = Input[index + 1];
+				break;
 
-				case 'B':
-					pixelValues[i][j] = (pixelValues[i][j] >> 16) & 0xFF;
-					break;
+			case 'B':
+				pixelValues[i][j] = Input[index + 2];
+				break;
 			}
 		}
 	}
@@ -210,10 +150,10 @@ void InitializeInputAndOutput(unsigned int* bitmap)
 {
 	// Input becomes bitmap without the header. Header is separated and later added back.
 	// Output initially becomes Input.
-	Input = new unsigned int[BmpWidth * BmpHeight];
-	Output = new unsigned int[BmpWidth * BmpHeight];
+	Input = new unsigned int[BmpWidth * BmpHeight * 3];
+	Output = new unsigned int[BmpWidth * BmpHeight * 3];
 
-	for (int i = 0; i < BmpWidth * BmpHeight; i++)
+	for (int i = 0; i < BmpWidth * BmpHeight * 3; i++)
 	{
 		Input[i] = bitmap[i + 54];
 		Output[i] = Input[i];
@@ -222,19 +162,18 @@ void InitializeInputAndOutput(unsigned int* bitmap)
 
 void AddHeaderToOutput(unsigned int* bitmap)
 {
-	unsigned int* newOutput = new unsigned int[54 + BmpWidth * BmpHeight];
+	unsigned int* newOutput = new unsigned int[54 + BmpWidth * BmpHeight * 3];
 
 	for (int i = 0; i < 54; i++)
 	{
 		newOutput[i] = bitmap[i];
 	}
 
-	for (int i=0;i< BmpWidth * BmpHeight;i++)
+	for (int i = 0; i < BmpWidth * BmpHeight * 3; i++)
 	{
 		newOutput[i + 54] = Output[i];
 	}
 
 	delete Output;
-	
 	Output = newOutput;
 }

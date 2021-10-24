@@ -7,7 +7,6 @@ using Microsoft.Win32;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -37,6 +36,8 @@ namespace HighPassImageFilter.UserInterface
 		/// Zmienna służąca do pomiaru czasu potrzebnego na wykonanie algorytmu.s
 		/// </summary>
 		private static Stopwatch _stopwatch;
+
+		private static string _filePath;
 
 		/// <summary>
 		/// Konstruktor okna uruchamiający się automatycznie na początku działania programu.
@@ -81,13 +82,16 @@ namespace HighPassImageFilter.UserInterface
 				ExecutionTimeBlock.Text = "";
 
 				FilePathBox.Text = fileName;
-				_bitmap = new Bitmap(fileName);
-				ContentPanel.Children.Add(new System.Windows.Controls.Image()
-				{
-					Source = ConvertBitmapToImageSource(_bitmap),
-					Width = _bitmap.Width,
-					Height = _bitmap.Height
-				});
+				_filePath = fileName;
+
+				_bitmap = BitmapConverter.LoadBitmap(fileName);
+
+				//ContentPanel.Children.Add(new System.Windows.Controls.Image()
+				//{
+				//	Source = ConvertBitmapToImageSource(_bitmap),
+				//	Width = _bitmap.Width,
+				//	Height = _bitmap.Height
+				//});
 				FilterBitmapButton.IsEnabled = true;
 				SaveBitmapButton.IsEnabled = false;
 			}
@@ -128,20 +132,26 @@ namespace HighPassImageFilter.UserInterface
 			//var newBitmap = Task.Run(()=>HighPassImageFilter.CS.HighPassFilter.ApplyFilterToImage(_bitmap)).Result; // Debug only
 			// var newBitmap = Task.Run(() => CsCaller.ApplyFilterToImage(_bitmap)).Result;
 
-			var bitmapAsArray = BitmapConverter.ConvertBitmapToByteArray(_bitmap);
-			var newBitmapAsArray = Task.Run(() => HighPassImageFilter.CS.HighPassFilterBytes.ApplyFilterToImage(bitmapAsArray, _bitmap.Width, _bitmap.Height)).Result;
-			var newBitmap = BitmapConverter.ConvertByteArrayToBitmap(newBitmapAsArray);
+			//var bitmapAsArray = BitmapConverter.ConvertBitmapToByteArray(_bitmap);
+			//var newBitmapAsArray = Task.Run(() => HighPassImageFilter.CS.HighPassFilterBytes.ApplyFilterToImage(bitmapAsArray, _bitmap.Width, _bitmap.Height)).Result;
+			//var newBitmap = BitmapConverter.ConvertByteArrayToBitmap(newBitmapAsArray);
 
-			ContentPanel.Children.Add(new System.Windows.Controls.Image()
-			{
-				Source = ConvertBitmapToImageSource(newBitmap),
-				Width = newBitmap.Width,
-				Height = newBitmap.Height,
-				Margin = new Thickness(20, 0, 0, 0)
-			});
+			//ContentPanel.Children.Add(new System.Windows.Controls.Image()
+			//{
+			//	Source = ConvertBitmapToImageSource(newBitmap),
+			//	Width = newBitmap.Width,
+			//	Height = newBitmap.Height,
+			//	Margin = new Thickness(20, 0, 0, 0)
+			//});
 
-			_bitmap = newBitmap;
-			SaveBitmapButton.IsEnabled = true;
+			//_bitmap = newBitmap;
+			//SaveBitmapButton.IsEnabled = true;
+
+			var bitmapAsArray = BitmapConverter.ConvertBitmapToByteArray(_bitmap, _filePath);
+			var newBitmapAsArray = CppCaller.ApplyFilterToImage(bitmapAsArray, _bitmap.Width, _bitmap.Height);
+			var newBitmap = BitmapConverter.ConvertByteArrayToBitmap(newBitmapAsArray, _bitmap);
+
+			CS.HighPassFilter.SaveImageToFile(newBitmap, "C:\\Programowanie\\HighPassImageFilter\\HighPassImageFilter.CS\\Resources\\OutputCpp.bmp");
 		}
 
 		/// <summary>
@@ -150,7 +160,7 @@ namespace HighPassImageFilter.UserInterface
 		/// </summary>
 		public async void CallAsmAlgorithm()
 		{
-			var newBitmap = AsmCaller.ApplyFilterToImage(_bitmap);
+			int test = AsmCaller.SumElementsIn2DArray(new byte[] { 1, 2, 3 });
 		}
 
 		/// <summary>
@@ -252,16 +262,6 @@ namespace HighPassImageFilter.UserInterface
 		{
 			AsmAlgorithmBox.IsChecked = false;
 			_asmAlgorithm = false;
-		}
-
-		private void TestAsm()
-		{
-			var testArray = new int[3, 3]
-			{
-				{5,5,5 },
-				{5,5,5 },
-				{5,5,5 }
-			};
 		}
 	}
 }

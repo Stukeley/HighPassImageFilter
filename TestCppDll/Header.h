@@ -1,6 +1,6 @@
 #pragma once
 
-unsigned int* ApplyFilterToImage(unsigned int* bitmap, int width, int height);
+extern "C" __declspec(dllexport) unsigned int* ApplyFilterToImage(unsigned int* bitmap, int width, int height);
 
 int** ApplyFilterToImageFragment(int** imageFragment);
 
